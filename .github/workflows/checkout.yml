@@ -33,7 +33,6 @@ jobs:
           def run(form_data):
               s = requests.Session()
               response = s.post("${{secrets.SOCKBOOM_LOGIN_URL}}", data=form_data)
-              print(form_data)
               print(response.text)
               print(response.status_code)
               if response.status_code == 200:
