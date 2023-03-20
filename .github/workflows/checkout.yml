@@ -25,11 +25,11 @@ jobs:
           import sys
           import traceback
 
-          login_url = ${{secrets.SOCKBOOM_LOGIN_URL}}
-          checkin_url = ${{secrets.SOCKBOOM_CHECKIN_URL}}
+          login_url = '${{secrets.SOCKBOOM_LOGIN_URL}}'
+          checkin_url = '${{secrets.SOCKBOOM_CHECKIN_URL}}'
           form_data = {
-              "email": ${{secrets.SOCKBOOM_USER}},
-              "passwd": ${{secrets.SOCKBOOM_PASSWD}},
+              "email": '${{secrets.SOCKBOOM_USER}}',
+              "passwd": '${{secrets.SOCKBOOM_PASSWD}}',
           }
 
           def run(form_data):
