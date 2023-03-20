@@ -27,8 +27,8 @@ jobs:
 
           login_url = ${{secrets.SOCKBOOM_LOGIN_URL}}
           checkin_url = ${{secrets.SOCKBOOM_CHECKIN_URL}}
+          check_passwd = ${{secrets.SOCKBOOM_PASSWD}}\
           check_email = ${{secrets.SOCKBOOM_USER}}
-          check_passwd = ${{secrets.SOCKBOOM_PASSWD}}
 
           form_data = {
             email: check_email,
