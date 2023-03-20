@@ -28,8 +28,8 @@ jobs:
           login_url = ${{secrets.SOCKBOOM_LOGIN_URL}}
           checkin_url = ${{secrets.SOCKBOOM_CHECKIN_URL}}
           form_data = {
-              "email": ${{SOCKBOOM_USER}},
-              "passwd": ${{SOCKBOOM_PASSWD}},
+              "email": ${{secrets.SOCKBOOM_USER}},
+              "passwd": ${{secrets.SOCKBOOM_PASSWD}},
           }
 
           def run(form_data):
