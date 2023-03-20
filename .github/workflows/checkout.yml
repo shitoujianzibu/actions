@@ -26,8 +26,8 @@ jobs:
           import traceback
 
           form_data = {
-            email: ${{secrets.SOCKBOOM_USER}},
-            passwd: ${{secrets.SOCKBOOM_USER}}
+            "email": ${{secrets.SOCKBOOM_USER}},
+            "passwd": ${{secrets.SOCKBOOM_USER}}
           }
 
           def run(form_data):
