@@ -33,30 +33,20 @@ jobs:
           def run(form_data):
               s = requests.Session()
               response = s.post("${{secrets.SOCKBOOM_URL}}/auth/login", data=form_data)
-              print(response.text)
+              print(response.json())
               print(response.status_code)
               if response.status_code == 200:
-                  resp = s.post("${{secrets.SOCKBOOM_URL}}/user/checkin")
-                  print(resp.json())
-                  if resp.status_code == 200:
-                    if resp.json()['ret'] == 0:
-                      msg_data = {
-                        "msgtype": "markdown",
-                        "markdown": {
-                          "content": "${{secrets.SOCKBOOM_USER}}" + "，签到成功，获得<font color=\"warning\">"+ resp.json()['msg'] + "</font>"
-                        }
+                resp = s.post("${{secrets.SOCKBOOM_URL}}/user/checkin")
+                print(resp.json())
+                if resp.status_code == 200:
+                  if "${{secrets.WEB_HOOK}}":
+                    msg_data = {
+                      "msgtype": "markdown",
+                      "markdown": {
+                        "content": response.json()['user'] + "，签到，<font color=\"warning\">"+ resp.json()['msg'] + "</font>"
                       }
-                      result = s.post("${{secrets.WEB_HOOK}}", json=msg_data)
-                      print(result.text)
-
-                    else:
-                      msg_data = {
-                        "msgtype": "markdown",
-                        "markdown": {
-                          "content": "${{secrets.SOCKBOOM_USER}}" + "，签到失败，<font color=\"warning\">" + resp.json()['msg'] + "</font>"
-                        }
-                      }
-                      s.post("${{secrets.WEB_HOOK}}", json=msg_data)
+                    }
+                    s.post("${{secrets.WEB_HOOK}}", json=msg_data)
           def main():
               run(form_data)
               print("run1")
