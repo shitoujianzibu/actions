@@ -8,53 +8,23 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  checkout: 
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout traffic
-        uses: actions/checkout@v2
-
-      - name: Checkout
-        env: 
-          SOCKBOOM_URL: ${{secrets.SOCKBOOM_URL}}
-          SOCKBOOM_USER: ${{secrets.SOCKBOOM_USER}}
-          SOCKBOOM_PASSWD: ${{secrets.SOCKBOOM_PASSWD}}
-          WEB_HOOK: ${{secrets.WEB_HOOK}}
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install dependencies
         run: |
-          import requests
-          import sys
-          import traceback
-
-          form_data = {
-            "email": "${{secrets.SOCKBOOM_USER}}",
-            "passwd": "${{secrets.SOCKBOOM_PASSWD}}"
-          }
-
-          def run(form_data):
-              s = requests.Session()
-              response = s.post("${{secrets.SOCKBOOM_URL}}/auth/login", data=form_data)
-              print(response.json())
-              print(response.status_code)
-              if response.status_code == 200:
-                resp = s.post("${{secrets.SOCKBOOM_URL}}/user/checkin")
-                print(resp.json())
-                if resp.status_code == 200:
-                  if "${{secrets.WEB_HOOK}}":
-                    msg_data = {
-                      "msgtype": "markdown",
-                      "markdown": {
-                        "content": response.json()['user'] + "，签到，<font color=\"warning\">"+ resp.json()['msg'] + "</font>"
-                      }
-                    }
-                    s.post("${{secrets.WEB_HOOK}}", json=msg_data)
-          def main():
-              run(form_data)
-              print("run1")
-
-          if __name__ == '__main__':
-              try:
-                  sys.exit(main())
-              except Exception as e:
-                  traceback.print_exc()
-        shell: python
-
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run main.py
+        run: |
+          python main.py
+        env:
+          SOCKBOOM_USER: ${{ secrets.SOCKBOOM_USER }}
+          SOCKBOOM_PASSWD: ${{ secrets.SOCKBOOM_PASSWD }}
+          SOCKBOOM_URL: ${{ secrets.SOCKBOOM_URL }}
+          WEB_HOOK: ${{ secrets.WEB_HOOK }}
